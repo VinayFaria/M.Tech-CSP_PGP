@@ -9,7 +9,7 @@ Some of the task which will be performed are listed below
 - Reconstruction: After performing the tasks of classification and localisation, the reconstruction task is to generate sound from syllables or phonemes present in the EEG signal.
 
 ## Codes
-All the codes can be found in the folder [here](https://github.com/VinayFaria/M.Tech-CSP_PGP/tree/main/FEIS%20dataset/codes)
+All the codes can be found in the folder [here](https://github.com/VinayFaria/M.Tech-CSP_PGP/tree/master/FEIS%20dataset/codes)
 
 ## References
 - [Decoding imagined, heard, and spoken speech: classification and regression of EEG using a 14-channel dry-contact mobile headset](https://www.research.ed.ac.uk/en/publications/decoding-imagined-heard-and-spoken-speech-classification-and-regr)
