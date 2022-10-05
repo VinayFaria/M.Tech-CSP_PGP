@@ -4,31 +4,22 @@
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder
-#import tensorflow as tf
+import tensorflow as tf
 from keras.layers import MaxPool2D, Conv2D, Flatten, BatchNormalization, Dense, Dropout
-#from keras.layers import concatenate, Reshape, Input, Lambda
 from keras.models import Sequential
-#from keras.models import Model, Sequential, load_model
 from keras.optimizers import Adam
-#from keras.optimizers import SGD, Adam
 from keras import regularizers
-#from keras import layers
-#from keras import backend as K
-from keras.callbacks import ModelCheckpoint
+#from keras.callbacks import ModelCheckpoint
+from keras.callbacks import CSVLogger
 import matplotlib.pyplot as plt
-#import numpy as np
-#import pandas as pd
-#import random
-#from tqdm import tqdm
-#import sys, os
 
 # Reading whole data saved in npz format
 EEG_data_and_labels = np.load("C:/Users/vinay/Downloads/FEIS_v1_1/experiments/combined_data.npz")
 
-#creating instance of one-hot-encoder
+# creating instance of one-hot-encoder
 encoder = OneHotEncoder(handle_unknown='ignore')
 
-#perform one-hot encoding on 'team' column 
+# perform one-hot encoding on 'team' column 
 one_hot_encoded_labels = encoder.fit_transform(EEG_data_and_labels["labels"].reshape(-1, 1)).toarray()
 
 X_train, X_test, y_train, y_test = train_test_split(EEG_data_and_labels["data"], one_hot_encoded_labels, test_size=0.2, random_state=42)
@@ -37,6 +28,7 @@ X_train, X_test, y_train, y_test = train_test_split(EEG_data_and_labels["data"],
 adam = Adam(learning_rate=0.00001,beta_1=0.9,beta_2=0.999,epsilon=1e-07)
 
 # The Sequential model is a linear stack of layers.
+tf.keras.backend.clear_session()
 model = Sequential()
 
 # the authors of Batch Normalization say that It should be applied immediately before the non-linearity of the current layer
@@ -77,17 +69,16 @@ model.add(Dense(16, activation = 'softmax'))
 # Configures the model for training.
 model.compile(optimizer = adam, loss = 'categorical_crossentropy', metrics=['accuracy'])
 
-filepath="net_dc.h5"
-checkpoint = ModelCheckpoint(filepath, monitor='val_accuracy', verbose=1, save_best_only=True, mode='max')
-callbacks_list = [checkpoint]
+# Creating instance of CSVlogger
+csv_logger = CSVLogger("./model_history/model_acc_loss_1.csv")
+
+# Saving model layers in text file
+with open('./model_history/model_summary_1.txt', 'w') as f:
+    model.summary(print_fn=lambda x: f.write(x + '\n'))
 
 # Fit the model
-#model.fit(X, Y, validation_split=0.33, epochs=150, batch_size=10, callbacks=callbacks_list, verbose=0)
-model.summary()
-#history=model.fit(x_train_master, y_train_master, validation_data =(x_test_master, y_test_master) , callbacks=callbacks_list, verbose=1, epochs = 10, batch_size = 128)
-history=model.fit(X_train, y_train, validation_data =(X_test, y_test) , callbacks=callbacks_list, verbose=1, epochs = 10, batch_size = 50)
+history = model.fit(X_train, y_train, validation_data =(X_test, y_test) , callbacks=[csv_logger], verbose=1, epochs = 10, batch_size = 50)
 
-print(history.history.keys())
 # summarize history for accuracy
 plt.plot(history.history['accuracy'])
 plt.plot(history.history['val_accuracy'])
@@ -97,7 +88,6 @@ plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
 plt.show()
 
-"""
 # summarize history for loss
 plt.plot(history.history['loss'])
 plt.plot(history.history['val_loss'])
@@ -107,8 +97,17 @@ plt.xlabel('epoch')
 plt.legend(['train', 'test'], loc='upper left')
 plt.show()
 
-from tensorflow.keras import callbacks
+"""
+filepath="/model_history/net_dc.h5"
+checkpoint = ModelCheckpoint(filepath, monitor='val_accuracy', verbose=1, save_best_only=True, mode='max')
+callbacks_list = [checkpoint]
+history=model.fit(X_train, y_train, validation_data =(X_test, y_test) , callbacks=callbacks_list, verbose=1, epochs = 5, batch_size = 50)
+#Load and evaluate the best model version
+model = load_model(filepath)
+yhat = model.predict(X_test)
+print('Model MSE on test data = ', mse(y_test, yhat).numpy())
 
+from tensorflow.keras import callbacks
 callbacks.ModelCheckpoint(
      filepath='model.{epoch:02d}-{val_loss:.4f}.h5', 
      save_freq='epoch', verbose=1, monitor='val_loss', 
@@ -117,4 +116,5 @@ callbacks.ModelCheckpoint(
 
 checkpoint_filepath = './checkpoints2/checkpoint_default'
 model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_filepath, mode="auto", save_freq=1, save_weights_only=True)
+
 """
