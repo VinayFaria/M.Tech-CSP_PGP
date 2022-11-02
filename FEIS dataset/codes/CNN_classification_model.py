@@ -19,13 +19,13 @@ EEG_data_and_labels = np.load("C:/Users/vinay/Downloads/FEIS_v1_1/experiments/co
 # creating instance of one-hot-encoder
 encoder = OneHotEncoder(handle_unknown='ignore')
 
-# perform one-hot encoding on 'team' column 
+# perform one-hot encoding on 'labels' column 
 one_hot_encoded_labels = encoder.fit_transform(EEG_data_and_labels["labels"].reshape(-1, 1)).toarray()
 
 X_train, X_test, y_train, y_test = train_test_split(EEG_data_and_labels["data"], one_hot_encoded_labels, test_size=0.2, random_state=42)
 
 # Adam optimization is a stochastic gradient descent method that is based on adaptive estimation of first-order and second-order moments.
-adam = Adam(learning_rate=0.00001,beta_1=0.9,beta_2=0.999,epsilon=1e-07)
+adam = Adam(learning_rate=0.001,beta_1=0.9,beta_2=0.999,epsilon=1e-07)
 
 # The Sequential model is a linear stack of layers.
 tf.keras.backend.clear_session()
@@ -37,12 +37,12 @@ model.add(BatchNormalization(input_shape=(14,256,1)))
 
 # detailed explanation https://keras.io/api/layers/convolution_layers/convolution2d/
 model.add(Conv2D(32, kernel_size = (1,4), activation='relu'))
-model.add(Conv2D(25, kernel_size = (14,1), activation='relu'))
+model.add(Conv2D(64, kernel_size = (14,1), activation='relu'))
 
 # detailed explanation https://keras.io/api/layers/pooling_layers/max_pooling2d/
 model.add(MaxPool2D(pool_size=(1, 4) , strides= 3))
 
-model.add(Conv2D(50, kernel_size = (1,4), activation='relu'))
+model.add(Conv2D(64, kernel_size = (1,4), activation='relu'))
 #model.add(Reshape((50,6,1), input_shape=(1,6,50)))
 #model.add(Reshape((50,78,1), input_shape=(1,78,50)))
 #model.add(MaxPool2D(pool_size=(1,3) , strides= None))
@@ -70,10 +70,10 @@ model.add(Dense(16, activation = 'softmax'))
 model.compile(optimizer = adam, loss = 'categorical_crossentropy', metrics=['accuracy'])
 
 # Creating instance of CSVlogger
-csv_logger = CSVLogger("./model_history/model_acc_loss_1.csv")
+csv_logger = CSVLogger("./model_history/model_acc_loss_2.csv")
 
 # Saving model layers in text file
-with open('./model_history/model_summary_1.txt', 'w') as f:
+with open('./model_history/model_summary_2.txt', 'w') as f:
     model.summary(print_fn=lambda x: f.write(x + '\n'))
 
 # Fit the model
