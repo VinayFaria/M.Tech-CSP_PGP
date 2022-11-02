@@ -1,0 +1,46 @@
+Model: "sequential"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ batch_normalization (BatchN  (None, 14, 256, 1)       4         
+ ormalization)                                                   
+                                                                 
+ conv2d (Conv2D)             (None, 14, 253, 32)       160       
+                                                                 
+ conv2d_1 (Conv2D)           (None, 1, 253, 64)        28736     
+                                                                 
+ max_pooling2d (MaxPooling2D  (None, 1, 84, 64)        0         
+ )                                                               
+                                                                 
+ conv2d_2 (Conv2D)           (None, 1, 81, 64)         16448     
+                                                                 
+ flatten (Flatten)           (None, 5184)              0         
+                                                                 
+ dense (Dense)               (None, 500)               2592500   
+                                                                 
+ dropout (Dropout)           (None, 500)               0         
+                                                                 
+ batch_normalization_1 (Batc  (None, 500)              2000      
+ hNormalization)                                                 
+                                                                 
+ dense_1 (Dense)             (None, 128)               64128     
+                                                                 
+ dropout_1 (Dropout)         (None, 128)               0         
+                                                                 
+ batch_normalization_2 (Batc  (None, 128)              512       
+ hNormalization)                                                 
+                                                                 
+ dense_2 (Dense)             (None, 32)                4128      
+                                                                 
+ dropout_2 (Dropout)         (None, 32)                0         
+                                                                 
+ batch_normalization_3 (Batc  (None, 32)               128       
+ hNormalization)                                                 
+                                                                 
+ dense_3 (Dense)             (None, 16)                528       
+                                                                 
+=================================================================
+Total params: 2,709,272
+Trainable params: 2,707,950
+Non-trainable params: 1,322
+_________________________________________________________________
