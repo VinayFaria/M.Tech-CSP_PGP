@@ -70,16 +70,17 @@ model.add(Dense(16, activation = 'softmax'))
 model.compile(optimizer = adam, loss = 'categorical_crossentropy', metrics=['accuracy'])
 
 # Creating instance of CSVlogger
-csv_logger = CSVLogger("./model_history/model_acc_loss_2.csv")
+csv_logger = CSVLogger("./model_history/model_acc_loss_5.csv")
 
 # Saving model layers in text file
-with open('./model_history/model_summary_2.txt', 'w') as f:
+with open('./model_history/model_summary_5.txt', 'w') as f:
     model.summary(print_fn=lambda x: f.write(x + '\n'))
 
 # Fit the model
-history = model.fit(X_train, y_train, validation_data =(X_test, y_test) , callbacks=[csv_logger], verbose=1, epochs = 10, batch_size = 50)
+history = model.fit(X_train, y_train, validation_data =(X_test, y_test) , callbacks=[csv_logger], verbose=1, epochs = 30, batch_size = 50)
 
 # summarize history for accuracy
+plt.figure(1)
 plt.plot(history.history['accuracy'])
 plt.plot(history.history['val_accuracy'])
 plt.title('model accuracy')
@@ -89,6 +90,7 @@ plt.legend(['train', 'validation'], loc='upper left')
 plt.show()
 
 # summarize history for loss
+plt.figure(2)
 plt.plot(history.history['loss'])
 plt.plot(history.history['val_loss'])
 plt.title('model loss')
