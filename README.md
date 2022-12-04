@@ -4,7 +4,6 @@
 ## Summary
 Some of the task which will be performed are listed below
 - Classification: Recognising units of speech from recorded EEG signals.
-- Localisation: Discriminating between imagined speech and non-imagined speech based on EEG signals.
 - Brain mapping: EEG signals are obtained from different electrodes placed on the surface of the scalp. Identifying the region of the brain based on electrical activity in EEG signals.
 - Reconstruction: After performing the tasks of classification and localisation, the reconstruction task is to generate sound from syllables or phonemes present in the EEG signal.
 
